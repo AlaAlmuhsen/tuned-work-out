@@ -1,7 +1,7 @@
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 function WorkoutDetails({ workout }) {
-    const { id, title, reps, load, created_at } = workout;
+    const { title, reps, load, created_at } = workout;
     return (
         <div className="workout-details">
             <h4>{title}</h4>
