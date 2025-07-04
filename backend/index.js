@@ -24,6 +24,10 @@ app.use((req, res, next) => {
 
 app.use("/api/workouts", workoutRouter);
 
+app.use((req, res, next) => {
+    res.status(404).send({ message: "Path not found" });
+});
+
 initDB()
     .then(() => {
         app.listen(PORT, () => {

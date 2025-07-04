@@ -1,5 +1,9 @@
 import express from "express";
-import { getWorkouts } from "../controllers/workoutController.js";
+import {
+    createWorkout,
+    getWorkout,
+    getWorkouts,
+} from "../controllers/workoutController.js";
 
 const workoutRouter = express.Router();
 
@@ -9,10 +13,11 @@ const workoutRouter = express.Router();
 workoutRouter.get("/", getWorkouts);
 
 // GET a single workout
-// workoutRouter.get("/:id", );
+workoutRouter.get("/:id", getWorkout);
+// example : /api/workouts/5
 
 // POST a new workout
-// workoutRouter.post("/", );
+workoutRouter.post("/", createWorkout);
 
 // DELETE a new workout
 // workoutRouter.delete("/:id", );
