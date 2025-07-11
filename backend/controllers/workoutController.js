@@ -1,16 +1,18 @@
 import initDB from "../db/connection.js";
 
 async function getWorkouts(req, res) {
+    const { id } = req.user
     const db = await initDB();
 
-    const [rows, meta] = await db.query(
-        "SELECT id,title, reps, `load`, created_at FROM workouts;"
+    const [rows, meta] = await db.execute(
+        "SELECT id,title, reps, `load`, created_at FROM workouts WHERE user_id = ?;",
+        [id]
     );
     res.send(rows);
 }
 
 async function getWorkout(req, res) {
-    const { id } = req.params;
+    const { id: userId } = req.params;
 
     if (isNaN(Number(id))) {
         return res.status(400).json({
@@ -22,7 +24,7 @@ async function getWorkout(req, res) {
 
     const [row, meta] = await db.execute(
         "SELECT id,title, reps, `load`, created_at FROM workouts WHERE id = ?",
-        [id]
+        [userId]
     );
 
     if (row && row.length == 0) {
@@ -35,6 +37,7 @@ async function getWorkout(req, res) {
 }
 
 async function createWorkout(req, res) {
+    const { id: userId } = req.user
     const { title, reps, load } = req.body;
 
     let emptyFields = [];
@@ -48,7 +51,6 @@ async function createWorkout(req, res) {
     if (!load) {
         emptyFields.push("load");
     }
-
     if (emptyFields.length > 0) {
         return res.status(400).json({
             error: "Please fill all of the fields",
@@ -59,8 +61,8 @@ async function createWorkout(req, res) {
     try {
         const db = await initDB();
         const workout = await db.execute(
-            "INSERT INTO workouts (title, reps, `load`) VALUE (?, ?, ?) ;",
-            [title, reps, load]
+            "INSERT INTO workouts (title, reps, `load`, user_id) VALUE (?, ?, ?, ?) ;",
+            [title, reps, load, userId]
         );
 
         const insertedId = workout[0].insertId;

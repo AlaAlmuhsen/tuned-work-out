@@ -5,6 +5,7 @@ import cors from "cors";
 import workoutRouter from "./routes/workouts.js";
 import initDB from "./db/connection.js";
 import userRouter from "./routes/user.js";
+import requireAuth from "./middleware/requireAuth.js";
 
 const PORT = process.env.PORT || 8000;
 
@@ -23,7 +24,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use("/api/workouts", workoutRouter);
+app.use("/api/workouts", requireAuth ,workoutRouter);
 app.use("/api/user", userRouter);
 
 app.use((req, res, next) => {

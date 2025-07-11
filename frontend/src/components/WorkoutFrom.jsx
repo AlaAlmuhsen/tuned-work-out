@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
+import { useAuthConext } from "../context/AuthContext";
 
 function WorkoutFrom() {
     const { dispatch } = useWorkout();
@@ -8,6 +9,7 @@ function WorkoutFrom() {
     const [reps, setReps] = useState("");
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
+    const { user } = useAuthConext();
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -24,6 +26,7 @@ function WorkoutFrom() {
                 body: JSON.stringify(workout),
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`
                 },
             });
 

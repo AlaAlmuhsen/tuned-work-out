@@ -2,13 +2,18 @@ import { useEffect } from "react";
 import WorkoutDetails from "../components/WorkoutDetails";
 import WorkoutFrom from "../components/WorkoutFrom";
 import { useWorkout } from "../context/WorkoutContext";
+import { useAuthConext } from "../context/AuthContext";
 
 function Home() {
     const { workouts, dispatch } = useWorkout();
-    console.log(workouts);
+    const { user } = useAuthConext()
     useEffect(() => {
         async function fetchWorkouts() {
-            const response = await fetch("http://localhost:8000/api/workouts");
+            const response = await fetch("http://localhost:8000/api/workouts", {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
 
             const data = await response.json();
             if (response.ok) {
