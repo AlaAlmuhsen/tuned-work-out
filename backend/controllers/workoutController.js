@@ -1,7 +1,8 @@
 import initDB from "../db/connection.js";
+import { DELETE_WORKOUT } from "../queries/workouts-queries.js";
 
 async function getWorkouts(req, res) {
-    const { id } = req.user
+    const { id } = req.user;
     const db = await initDB();
 
     const [rows, meta] = await db.execute(
@@ -37,7 +38,7 @@ async function getWorkout(req, res) {
 }
 
 async function createWorkout(req, res) {
-    const { id: userId } = req.user
+    const { id: userId } = req.user;
     const { title, reps, load } = req.body;
 
     let emptyFields = [];
@@ -80,4 +81,42 @@ async function createWorkout(req, res) {
     }
 }
 
-export { getWorkouts, getWorkout, createWorkout };
+async function deleteWorkout(req, res) {
+    try {
+        const { id } = req.params;
+        const user = req.user;
+
+        if (isNaN(Number(id))) {
+            return res.status(400).json({
+                error: "id should be a number",
+            });
+        }
+
+        const db = await initDB();
+
+        const [row, meta] = await db.execute("SELECT * FROM workouts WHERE id = ? AND user_id = ? ", [id, user.id]);
+
+        if (!row || row.length === 0) {
+            return res.status(404).json({
+                error: "Workout not found",
+            }); 
+        }
+
+        await db.execute(DELETE_WORKOUT, [id, user.id]);
+
+
+
+        res.status(200).json({
+            message: "Workout deleted successfully",
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+        });
+    }
+
+}
+
+export { getWorkouts, getWorkout, createWorkout, deleteWorkout };

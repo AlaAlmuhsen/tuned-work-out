@@ -1,6 +1,7 @@
 import express from "express";
 import {
     createWorkout,
+    deleteWorkout,
     getWorkout,
     getWorkouts,
 } from "../controllers/workoutController.js";
@@ -20,7 +21,7 @@ workoutRouter.get("/:id", getWorkout);
 workoutRouter.post("/", createWorkout);
 
 // DELETE a new workout
-// workoutRouter.delete("/:id", );
+workoutRouter.delete("/:id", deleteWorkout);
 
 // UPDATE a workout
 // workoutRouter.patch("/:id", );

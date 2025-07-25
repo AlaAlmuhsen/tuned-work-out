@@ -18,6 +18,11 @@ function workoutsReducer(state, action) {
                 ...state,
                 workouts: [action.payload, ...state.workouts],
             };
+        case "DELETE_WORKOUT":
+            return {
+                ...state,
+                workouts: state.workouts.filter((w) => w.id !== action.payload.id),
+            }
     }
 }
 

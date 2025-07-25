@@ -1,7 +1,36 @@
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { useAuthConext } from "../context/AuthContext";
+import { useWorkout } from "../context/WorkoutContext";
 
 function WorkoutDetails({ workout }) {
-    const { title, reps, load, created_at } = workout;
+    const { id, title, reps, load, created_at } = workout;
+    const { user } = useAuthConext();
+    const { dispatch } = useWorkout();
+
+    async function handleDelete() {
+        if (!user) {
+            return
+        }
+        const response = await fetch(`http://localhost:8000/api/workouts/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            dispatch({
+                type: "DELETE_WORKOUT",
+                payload: {
+                    id: id
+                },
+            });
+        }
+
+        console.log(data)
+    }   
+
     return (
         <div className="workout-details">
             <h4>{title}</h4>
@@ -14,7 +43,7 @@ function WorkoutDetails({ workout }) {
             <p>
                 {formatDistanceToNow(new Date(created_at), { addSuffix: true })}
             </p>
-            <span>delete</span>
+            <span onClick={handleDelete}>delete</span>
         </div>
     );
 }
