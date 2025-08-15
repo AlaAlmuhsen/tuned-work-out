@@ -1,0 +1,1 @@
+export const DELETE_WORKOUT = "DELETE FROM workouts WHERE id = ? AND user_id = ?";
