@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useWorkout } from "../context/WorkoutContext";
 import { useAuthConext } from "../context/AuthContext";
 
+const { VITE_BASE_DOMAIN } = import.meta.env;
+
+
 function WorkoutFrom() {
     const { dispatch } = useWorkout();
     const [title, setTitle] = useState("");
@@ -21,7 +24,7 @@ function WorkoutFrom() {
         };
 
         try {
-            const response = await fetch("http://localhost:8000/api/workouts", {
+            const response = await fetch(`${VITE_BASE_DOMAIN}/api/workouts`, {
                 method: "POST",
                 body: JSON.stringify(workout),
                 headers: {

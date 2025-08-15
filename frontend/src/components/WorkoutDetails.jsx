@@ -2,6 +2,9 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { useAuthConext } from "../context/AuthContext";
 import { useWorkout } from "../context/WorkoutContext";
 
+const { VITE_BASE_DOMAIN } = import.meta.env;
+
+
 function WorkoutDetails({ workout }) {
     const { id, title, reps, load, created_at } = workout;
     const { user } = useAuthConext();
@@ -11,7 +14,7 @@ function WorkoutDetails({ workout }) {
         if (!user) {
             return
         }
-        const response = await fetch(`http://localhost:8000/api/workouts/${id}`, {
+        const response = await fetch(`${VITE_BASE_DOMAIN}/api/workouts/${id}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${user.token}`
